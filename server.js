@@ -37,12 +37,10 @@ const removeUser = (socketId) => {
 };
 
 const addRoom = (data) => {
-    if(rooms.some((room) => room.admin !== data.admin)){
+    if(rooms.some((room) => room.admin !== data.admin) && rooms.some((room) => room._id !== data._id)){
         rooms.push(data);
     }else if (rooms.length === 0){
         rooms.push(data);
-    }else if(rooms.length > 0){
-        rooms.filter((room) => room.admin !== data.admin);
     }
 };
 
