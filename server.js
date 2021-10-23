@@ -72,7 +72,11 @@ io.on("connection", (socket) => {
     socket.on("sendMessage", (message) => {
         messages.push(message);
         io.emit("recieveMessage", messages);
-    })
+    });
+
+    socket.on("requestUsers", () => {
+        io.emit("getRoomUsers", roomUsers);
+    });
 
     socket.on("disconnect", () => {
         console.log("a user disconnected!");
