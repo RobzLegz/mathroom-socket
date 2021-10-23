@@ -1,45 +1,16 @@
 require("dotenv").config();
 const io = require("socket.io")(process.env.PORT, {
-  cors: {
-    origin: "https://mathroom.vercel.app",
-  },
+    cors: {
+        origin: "https://mathroom.vercel.app",
+    },
 });
-  
-interface User{
-    userId: string;
-    socketId: string;
-}
 
-interface RoomUser{
-    userId: string;
-    socketId: string;
-    roomId: string;
-    username: string;
-}
+let users = [];
+let roomUsers = [];
+let rooms = [];
+let messages = [];
 
-interface Room{
-    roomName: string;
-    totalStages: number;
-    maxPlayers: number;
-    isPrivate: boolean;
-    hasStarted: boolean;
-    admin: string;
-    _id: string;
-}
-
-interface Message{
-    roomID: string;
-    username: string;
-    message: string;
-    color: number;
-}
-
-let users: User[] = [];
-let roomUsers: RoomUser[] = [];
-let rooms: Room[] = [];
-let messages: Message[] = [];
-
-const addUser = (userId: string, socketId: string) => {
+const addUser = (userId, socketId) => {
     if(!users.some((user) => user.userId !== userId)){
         users.push({ userId, socketId });
     }else if(users.length === 0){
@@ -47,7 +18,7 @@ const addUser = (userId: string, socketId: string) => {
     }
 };
 
-const joinRoom = (userId: string, socketId: string, username: string, roomId: string) => {
+const joinRoom = (userId, socketId, username, roomId) => {
     if(roomUsers.some((user) => user.userId !== userId)){
         roomUsers.push({ userId, socketId, roomId, username });
     }else if(roomUsers.length === 0){
@@ -55,17 +26,17 @@ const joinRoom = (userId: string, socketId: string, username: string, roomId: st
     }
 };
 
-const leaveRoom = (socketId: string, userId: string) => {
+const leaveRoom = (socketId, userId) => {
     roomUsers = roomUsers.filter((user) => user.socketId !== socketId);
     roomUsers = roomUsers.filter((user) => user.userId !== userId);
 };
 
-const removeUser = (socketId: string) => {
+const removeUser = (socketId) => {
     users = users.filter((user) => user.socketId !== socketId);
     roomUsers = roomUsers.filter((user) => user.socketId !== socketId);
 };
 
-const addRoom = (data: Room) => {
+const addRoom = (data) => {
     if(rooms.some((room) => room.admin !== data.admin)){
         rooms.push(data);
     }else if (rooms.length === 0){
@@ -75,32 +46,32 @@ const addRoom = (data: Room) => {
     }
 };
 
-const getUser = (userId: string) => {
+const getUser = (userId) => {
     return users.find((user) => user.userId === userId);
 };
 
-io.on("connection", (socket: any) => {
-    socket.on("addUser", (userId: string) => {
+io.on("connection", (socket) => {
+    socket.on("addUser", (userId) => {
         addUser(userId, socket.id);
         io.emit("getUsers", users);
     });
 
-    socket.on("joinRoom", (userId: string, username: string, roomId: string) => {
+    socket.on("joinRoom", (userId, username, roomId) => {
         joinRoom(userId, socket.id, username, roomId);
         io.emit("getRoomUsers", roomUsers);
     });
 
-    socket.on("leaveRoom", (userId: string) => {
+    socket.on("leaveRoom", (userId) => {
         leaveRoom(socket.id, userId);
         io.emit("getRoomUsers", roomUsers);
     });
 
-    socket.on("addRoom", (data: Room) => {
+    socket.on("addRoom", (data) => {
         addRoom(data);
         io.emit("getRooms", rooms);
     });
 
-    socket.on("sendMessage", (message: Message) => {
+    socket.on("sendMessage", (message) => {
         messages.push(message);
         io.emit("recieveMessage", messages);
     })
