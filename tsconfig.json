@@ -1,13 +1,9 @@
 {
     "compilerOptions": {
-        "incremental": true,
         "target": "es6",
         "strict": true,
-        "esModuleInterop": true,
         "allowJs": true,
-        "module": "esnext",
-        "noImplicitAny": true,
-        "removeComments": true,
+        "module": "commonjs",
     },
     "include": [
         "**/*.ts",
@@ -15,6 +11,5 @@
     ],
     "exclude": [
         "node_modules",
-        "**/*.spec.ts"
     ],
 }
