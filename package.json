@@ -2,7 +2,7 @@
   "name": "socket",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "start": "ts-node server.ts",
     "dev": "nodemon server.ts"
@@ -12,7 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
-    "socket.io": "^4.2.0"
+    "socket.io": "^4.2.0",
+    "ts-node": "^10.4.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.12",
