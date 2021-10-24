@@ -32,7 +32,7 @@ const leaveRoom = (socketId, userId) => {
 };
 
 const disbandRoom = (roomId) => {
-    rooms = rooms.filter((room) => room._id !== roomId);
+    rooms.filter((room) => room._id !== roomId);
 };
 
 const removeUser = (socketId) => {
