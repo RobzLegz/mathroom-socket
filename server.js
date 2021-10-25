@@ -9,6 +9,7 @@ let users = [];
 let roomUsers = [];
 let rooms = [];
 let messages = [];
+let disbandedIds = [];
 
 const addUser = (userId, socketId) => {
     if(!users.some((user) => user.userId !== userId)){
@@ -33,6 +34,7 @@ const leaveRoom = (socketId, userId) => {
 
 const disbandRoom = (roomId) => {
     rooms.filter((room) => room._id !== roomId);
+    disbandedIds.push(roomId);
 };
 
 const removeUser = (socketId) => {
@@ -92,6 +94,5 @@ io.on("connection", (socket) => {
         removeUser(socket.id);
         io.emit("getRoomUsers", roomUsers);
         io.emit("getUsers", users);
-        io.emit("getRooms", rooms);
     });
 });
