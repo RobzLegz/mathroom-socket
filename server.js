@@ -50,6 +50,10 @@ const addRoom = (data) => {
     }
 };
 
+const startGame = (roomId) => {
+    rooms.filter((room) => room._id !== roomId);
+};
+
 const getUser = (userId) => {
     return users.find((user) => user.userId === userId);
 };
@@ -87,6 +91,11 @@ io.on("connection", (socket) => {
     socket.on("disbandRoom", (roomId) => {
         disbandRoom(roomId);
         io.emit("removeRoom", roomId);
+    });
+
+    socket.on("startGame", (roomId) => {
+        startGame(roomId);
+        io.emit("startedGame", roomId);
     });
 
     socket.on("disconnect", () => {
