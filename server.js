@@ -11,6 +11,17 @@ let rooms = [];
 let messages = [];
 let disbandedIds = [];
 
+const colors = [
+    "#aef511",
+    "#5811f5",
+    "#b516c7",
+    "#e81717",
+    "#e8d517",
+    "#e8e817",
+    "#1756e8",
+    "#17abe8"
+]
+
 const addUser = (userId, socketId) => {
     if(!users.some((user) => user.userId !== userId)){
         users.push({ userId, socketId });
@@ -21,9 +32,9 @@ const addUser = (userId, socketId) => {
 
 const joinRoom = (userId, socketId, username, roomId) => {
     if(roomUsers.some((user) => user.userId !== userId)){
-        roomUsers.push({ userId, socketId, roomId, username });
+        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * 6)] });
     }else if(roomUsers.length === 0){
-        roomUsers.push({ userId, socketId, roomId, username });
+        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * 6)] });
     }
 };
 
@@ -54,8 +65,8 @@ const startGame = (roomId) => {
     rooms.filter((room) => room._id !== roomId);
 };
 
-const getUser = (userId) => {
-    return users.find((user) => user.userId === userId);
+const getRoomUser = (userId) => {
+    return roomUsers.find((user) => user.userId === userId);
 };
 
 io.on("connection", (socket) => {
@@ -80,7 +91,17 @@ io.on("connection", (socket) => {
     });
 
     socket.on("sendMessage", (message) => {
-        messages.push(message);
+        const color = getRoomUser(message.userId).color;
+
+        const data = {
+            roomID: message.roomID,
+            username: message.username,
+            message: message.message,
+            userId: message.userId,
+            color: color
+        }
+
+        messages.push(data);
         io.emit("recieveMessage", messages);
     });
 
