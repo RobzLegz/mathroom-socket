@@ -32,9 +32,9 @@ const addUser = (userId, socketId) => {
 
 const joinRoom = (userId, socketId, username, roomId) => {
     if(roomUsers.some((user) => user.userId !== userId)){
-        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * 6)] });
+        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * 7)]});
     }else if(roomUsers.length === 0){
-        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * 6)] });
+        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * 7)]});
     }
 };
 
@@ -54,6 +54,8 @@ const removeUser = (socketId) => {
 };
 
 const addRoom = (data) => {
+    rooms.filter((room) => room._id)
+
     if(rooms.some((room) => room.admin !== data.admin) && rooms.some((room) => room._id !== data._id)){
         rooms.push(data);
     }else if (rooms.length === 0){
@@ -63,6 +65,7 @@ const addRoom = (data) => {
 
 const startGame = (roomId) => {
     rooms.filter((room) => room._id !== roomId);
+    disbandedIds.push(roomId);
 };
 
 const getRoomUser = (userId) => {
@@ -116,6 +119,7 @@ io.on("connection", (socket) => {
 
     socket.on("startGame", (roomId) => {
         startGame(roomId);
+        disbandRoom(roomId);
         io.emit("startedGame", roomId);
     });
 
