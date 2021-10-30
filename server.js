@@ -19,7 +19,20 @@ const colors = [
     "#e8d517",
     "#e8e817",
     "#1756e8",
-    "#17abe8"
+    "#17abe8",
+    "#664586",
+    "#5FE4EC",
+    "#32D455",
+    "#3AB8E0",
+    "#A365C9",
+    "#B14242",
+    "#E9ED37",
+    "#D43259",
+    "#EF93BF",
+    "#FC993D",
+    "#E73030",
+    "#2FB64C",
+    "#26A376",
 ]
 
 const addUser = (userId, socketId) => {
@@ -32,9 +45,9 @@ const addUser = (userId, socketId) => {
 
 const joinRoom = (userId, socketId, username, roomId) => {
     if(roomUsers.some((user) => user.userId !== userId)){
-        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * 7)]});
+        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * (colors.length - 1))]});
     }else if(roomUsers.length === 0){
-        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * 7)]});
+        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * (colors.length - 1))]});
     }
 };
 
