@@ -52,7 +52,7 @@ const joinRoom = (userId, socketId, username, roomId) => {
             username, 
             color: colors[Math.floor(Math.random() * (colors.length - 1))],
             level: 0,
-            ponts: 0,
+            points: 0,
         });
     }else if(roomUsers.length === 0){
         roomUsers.push({ 
@@ -62,7 +62,7 @@ const joinRoom = (userId, socketId, username, roomId) => {
             username, 
             color: colors[Math.floor(Math.random() * (colors.length - 1))],
             level: 0,
-            ponts: 0,
+            points: 0,
         });
     }
 };
@@ -73,12 +73,14 @@ const leaveRoom = (socketId, userId) => {
 };
 
 const completeLevel = (socketId) => {
-    roomUsers.find((rUser) => rUser.socketId === socketId).level += 1;
-    roomUsers.find((rUser) => rUser.socketId === socketId).points += 1;
+    const user = roomUsers.find((rUser) => rUser.socketId === socketId);
+    user.level += 1;
+    user.points += 1;
 }
 
 const failLevel = (socketId) => {
-    roomUsers.find((rUser) => rUser.socketId === socketId).level += 1;
+    const user = roomUsers.find((rUser) => rUser.socketId === socketId);
+    user.level += 1;
 }
 
 const disbandRoom = (roomId) => {
