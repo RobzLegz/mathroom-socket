@@ -45,9 +45,25 @@ const addUser = (userId, socketId) => {
 
 const joinRoom = (userId, socketId, username, roomId) => {
     if(roomUsers.some((user) => user.userId !== userId)){
-        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * (colors.length - 1))]});
+        roomUsers.push({ 
+            userId, 
+            socketId,
+            roomId, 
+            username, 
+            color: colors[Math.floor(Math.random() * (colors.length - 1))],
+            level: 0,
+            ponts: 0,
+        });
     }else if(roomUsers.length === 0){
-        roomUsers.push({ userId, socketId, roomId, username, color: colors[Math.floor(Math.random() * (colors.length - 1))]});
+        roomUsers.push({ 
+            userId, 
+            socketId,
+            roomId, 
+            username, 
+            color: colors[Math.floor(Math.random() * (colors.length - 1))],
+            level: 0,
+            ponts: 0,
+        });
     }
 };
 
@@ -56,8 +72,18 @@ const leaveRoom = (socketId, userId) => {
     roomUsers = roomUsers.filter((user) => user.userId !== userId);
 };
 
+const completeLevel = (socketId) => {
+    roomUsers.find((rUser) => rUser.socketId === socketId).level += 1;
+    roomUsers.find((rUser) => rUser.socketId === socketId).points += 1;
+}
+
+const failLevel = (socketId) => {
+    roomUsers.find((rUser) => rUser.socketId === socketId).level += 1;
+}
+
 const disbandRoom = (roomId) => {
     rooms.filter((room) => room._id !== roomId);
+    roomUsers.filter((user) => user.roomId !== roomId);
     disbandedIds.push(roomId);
 };
 
@@ -104,6 +130,16 @@ io.on("connection", (socket) => {
     socket.on("addRoom", (data) => {
         addRoom(data);
         io.emit("getRooms", rooms);
+    });
+
+    socket.on("completeLevel", () => {
+        completeLevel(socket.id);
+        io.emit("getRoomUsers", roomUsers);
+    });
+
+    socket.on("failLevel", () => {
+        failLevel(socket.id);
+        io.emit("getRoomUsers", roomUsers);
     });
 
     socket.on("sendMessage", (message) => {
