@@ -67,6 +67,19 @@ const joinRoom = (userId, socketId, username, roomId) => {
     }
 };
 
+const filterRooms = () => {
+    if(disbandedIds.length > 0){
+        rooms.forEach((room) => {
+            if(disbandedIds.includes(room._id)){
+                rooms.filter((r) => r._id !== room._id);
+                rooms = rooms.filter((r) => r._id !== room._id);
+                rooms.filter((r) => r !== room);
+                rooms = rooms.filter((r) => r !== room);
+            }
+        });
+    }
+}
+
 const leaveRoom = (socketId, userId) => {
     roomUsers = roomUsers.filter((user) => user.socketId !== socketId);
     roomUsers = roomUsers.filter((user) => user.userId !== userId);
@@ -91,6 +104,8 @@ const disbandRoom = (roomId) => {
     rooms.filter((room) => room._id !== roomId);
     roomUsers.filter((user) => user.roomId !== roomId);
     disbandedIds.push(roomId);
+
+    filterRooms();
 };
 
 const removeUser = (socketId) => {
@@ -99,8 +114,8 @@ const removeUser = (socketId) => {
 };
 
 const addRoom = (data) => {
-    rooms.filter((room) => room._id)
-
+    filterRooms();
+    
     if(rooms.some((room) => room.admin !== data.admin) && rooms.some((room) => room._id !== data._id)){
         rooms.push(data);
     }else if (rooms.length === 0){
@@ -111,6 +126,8 @@ const addRoom = (data) => {
 const startGame = (roomId) => {
     rooms.filter((room) => room._id !== roomId);
     disbandedIds.push(roomId);
+
+    filterRooms();
 };
 
 const getRoomUser = (userId) => {
