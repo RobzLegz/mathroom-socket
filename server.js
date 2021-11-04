@@ -74,13 +74,17 @@ const leaveRoom = (socketId, userId) => {
 
 const completeLevel = (socketId) => {
     const user = roomUsers.find((rUser) => rUser.socketId === socketId);
-    user.level += 1;
-    user.points += 1;
+    if(user){
+        user.level += 1;
+        user.points += 1;
+    }
 }
 
 const failLevel = (socketId) => {
     const user = roomUsers.find((rUser) => rUser.socketId === socketId);
-    user.level += 1;
+    if(user){
+        user.level += 1;
+    }
 }
 
 const disbandRoom = (roomId) => {
