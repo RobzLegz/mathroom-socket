@@ -195,6 +195,10 @@ io.on("connection", (socket) => {
         io.emit("startedGame", roomId);
     });
 
+    socket.on("getMessages", () => {
+        io.emit("sendMessages", messages);
+    });
+
     socket.on("disconnect", () => {
         console.log("a user disconnected!");
         removeUser(socket.id);
