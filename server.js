@@ -1,7 +1,7 @@
 require("dotenv").config();
 const io = require("socket.io")(process.env.PORT, {
     cors: {
-        origin: "https://mathroom.vercel.app",
+        origin: "http://localhost:3000",
     },
 });
 
@@ -75,6 +75,15 @@ const filterRooms = () => {
                 rooms = rooms.filter((r) => r._id !== room._id);
                 rooms.filter((r) => r !== room);
                 rooms = rooms.filter((r) => r !== room);
+            }else{
+                disbandedIds.forEach(id => {
+                    if(id === room._id){
+                        rooms.filter((r) => r._id !== room._id);
+                        rooms = rooms.filter((r) => r._id !== room._id);
+                        rooms.filter((r) => r !== room);
+                        rooms = rooms.filter((r) => r !== room);
+                    }
+                }) 
             }
         });
     }
@@ -135,6 +144,8 @@ const getRoomUser = (userId) => {
 };
 
 io.on("connection", (socket) => {
+    filterRooms();
+    
     socket.on("addUser", (userId) => {
         addUser(userId, socket.id);
         io.emit("getUsers", users);
@@ -152,6 +163,7 @@ io.on("connection", (socket) => {
 
     socket.on("addRoom", (data) => {
         addRoom(data);
+        filterRooms();
         io.emit("getRooms", rooms);
     });
 
@@ -186,12 +198,14 @@ io.on("connection", (socket) => {
 
     socket.on("disbandRoom", (roomId) => {
         disbandRoom(roomId);
+        filterRooms();
         io.emit("removeRoom", roomId);
     });
 
     socket.on("startGame", (roomId) => {
         startGame(roomId);
         disbandRoom(roomId);
+        filterRooms();
         io.emit("startedGame", roomId);
     });
 
@@ -201,6 +215,7 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         console.log("a user disconnected!");
+        filterRooms();
         removeUser(socket.id);
         io.emit("getRoomUsers", roomUsers);
         io.emit("getUsers", users);
