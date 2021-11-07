@@ -1,7 +1,7 @@
 require("dotenv").config();
 const io = require("socket.io")(process.env.PORT, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "https://mathroom.vercel.app",
     },
 });
 
@@ -145,7 +145,7 @@ const getRoomUser = (userId) => {
 
 io.on("connection", (socket) => {
     filterRooms();
-    
+
     socket.on("addUser", (userId) => {
         addUser(userId, socket.id);
         io.emit("getUsers", users);
